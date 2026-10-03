@@ -1,0 +1,24 @@
+{
+  "name": "threadline-b2b-catalogue",
+  "version": "2.0.0",
+  "description": "Threadline B2B Catalogue",
+  "author": "Threadline B2B",
+  "main": "main.js",
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/filesystem": "^6.0.1",
+    "@capacitor/share": "^6.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2",
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.threadline.b2b",
+    "productName": "Threadline B2B Catalogue",
+    "files": ["main.js", "preload.js", "index.html"],
+    "win": { "target": ["nsis", "portable"] }
+  }
+}
