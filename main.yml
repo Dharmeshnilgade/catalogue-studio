@@ -31,11 +31,22 @@ jobs:
           const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
           const path = require('path');
           const fs = require('fs');
+          let fd = null, outPath = '';
           ipcMain.handle('save', async (e, name, b64) => {
             const r = await dialog.showSaveDialog({ defaultPath: name });
             if (r.canceled || !r.filePath) return false;
             fs.writeFileSync(r.filePath, Buffer.from(b64, 'base64'));
-            if (name.endsWith('.pdf')) shell.openPath(r.filePath); else shell.showItemInFolder(r.filePath);
+            return true;
+          });
+          ipcMain.handle('open', async (e, name) => {
+            const r = await dialog.showSaveDialog({ defaultPath: name });
+            if (r.canceled || !r.filePath) return false;
+            outPath = r.filePath; fd = fs.openSync(outPath, 'w'); return true;
+          });
+          ipcMain.handle('write', (e, buf) => { fs.writeSync(fd, Buffer.from(buf)); return true; });
+          ipcMain.handle('close', () => {
+            fs.closeSync(fd); fd = null;
+            if (outPath.endsWith('.pdf')) shell.openPath(outPath); else shell.showItemInFolder(outPath);
             return true;
           });
           app.whenReady().then(() => {
@@ -48,7 +59,12 @@ jobs:
           EOF
           cat > preload.js <<'EOF'
           const { contextBridge, ipcRenderer } = require('electron');
-          contextBridge.exposeInMainWorld('desk', { save: (name, b64) => ipcRenderer.invoke('save', name, b64) });
+          contextBridge.exposeInMainWorld('desk', {
+            save: (name, b64) => ipcRenderer.invoke('save', name, b64),
+            open: (name) => ipcRenderer.invoke('open', name),
+            write: (buf) => ipcRenderer.invoke('write', buf),
+            close: () => ipcRenderer.invoke('close')
+          });
           EOF
       - run: npm install
       - run: npx electron-builder --win --publish never
