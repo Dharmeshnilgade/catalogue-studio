@@ -20,7 +20,7 @@ input,textarea,select{width:100%;padding:10px;border:1px solid var(--l);border-r
 .th{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.th div{padding:12px;border-radius:10px;border:2px solid var(--l);font-weight:600;cursor:pointer;text-align:center}.th div.on{border-color:var(--a)}
 .li{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--l)}.li img{width:46px;height:58px;object-fit:cover;border-radius:6px}.li span{flex:1}.li button{border:1px solid var(--l);background:var(--c);color:var(--t);border-radius:8px;padding:6px 9px}
 .nav{display:flex;align-items:center;justify-content:space-between;margin:10px 0}.nav button{padding:9px 16px;border-radius:9px;border:1px solid var(--l);background:var(--c);color:var(--t);font-weight:600}
-#fxbox{display:none!important}#cv{width:100%;max-width:360px;display:block;margin:0 auto;border-radius:10px;border:1px solid var(--l)}
+#cv{width:100%;max-width:360px;display:block;margin:0 auto;border-radius:10px;border:1px solid var(--l)}
 #signup{position:fixed;inset:0;z-index:50;background:var(--b);overflow:auto;padding:24px 16px}#signup .card{max-width:420px;margin:30px auto}.err{color:#b3372c;font-size:13px;min-height:18px;margin-top:8px}
 </style></head><body>
 <div id="signup"><div class="card" id="sform"><h1>THREADLINE B2B</h1><p class="sub">Create your free account to start (one time only).</p>
@@ -30,7 +30,7 @@ input,textarea,select{width:100%;padding:10px;border:1px solid var(--l);border-r
 <div class="card" id="sstep" style="display:none"><h1>One last step</h1><p class="sub">Your registration must be sent to Threadline B2B before the app opens.</p><div class="err" id="smsg"></div>
 <button class="btn" id="bauto" onclick="autoSend()">Send registration</button>
 <div id="bman"><button class="btn" onclick="manual('wa')">1. Send on WhatsApp (internet)</button><button class="btn g" onclick="manual('sms')">1. Send by SMS (no internet)</button><button class="btn g" id="bdone" style="display:none" onclick="finish()">2. ✅ I have sent it – open app</button></div></div></div>
-<main id="app" style="display:none"><h1>Threadline B2B Catalogue</h1><p class="sub" id="curn"></p><p class="sub" id="sv" style="font-weight:700"></p>
+<main id="app" style="display:none"><h1>Threadline B2B Catalogue</h1><p class="sub" id="curn"></p>
 <div class="tabs"><button id="t0" onclick="tab(0)">Catalogues</button><button id="t1" onclick="tab(1)">Products</button><button id="t2" onclick="tab(2)">Design</button><button id="t3" onclick="tab(3)">Preview</button></div>
 
 <section id="s0"><div class="card"><button class="btn" style="margin-top:0" onclick="newCat()">＋ New catalogue</button><div id="clist"></div></div>
@@ -61,7 +61,6 @@ input,textarea,select{width:100%;padding:10px;border:1px solid var(--l);border-r
 <div class="row"><div><label>Top title style</label><select id="hs"><option value="solid">Solid</option><option value="outline">Outline</option><option value="small">Small, spaced</option></select></div><div><label>Transparency</label><input type="range" id="ho" min="0.15" max="1" step="0.01"></div></div>
 <label>Page layout</label><select id="lay"><option value="one">Full-screen photo pages (best for mobile)</option><option value="grid">6 products per page (price list)</option></select>
 <label>Photo fit</label><select id="fit"><option value="0">Fill the screen (crop edges)</option><option value="1">Show whole photo</option></select>
-<label>PDF picture quality</label><select id="pq"><option value="1">Standard (1080×1920)</option><option value="1.3333">High (1440×2560)</option><option value="2">Maximum (2160×3840, big file)</option></select>
 <label>Show prices</label><select id="sp"><option value="1">Yes</option><option value="0">No</option></select>
 <label>Theme</label><div class="th" id="themes"></div><label>Custom colours: page · text · accent</label><div class="row"><input type="color" id="cbg"><input type="color" id="cink"><input type="color" id="cacc"></div>
 <div class="row"><div><label>Font style</label><select id="fnt"><option value="elegant">Elegant</option><option value="modern">Modern</option><option value="luxe">Luxe</option><option value="bold">Bold</option></select></div><div><label>Corners</label><select id="rad"><option value="0">Square</option><option value="12">Soft</option><option value="30">Rounded</option></select></div></div>
@@ -74,26 +73,17 @@ const $=id=>document.getElementById(id),OWNER='919826660155',SIGNUP_URL='https:/
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const THEMES={ivory:['Ivory & Gold','#faf6ef','#2b2622','#a9823f'],noir:['Noir & Gold','#121212','#f4efe6','#d4af37'],blush:['Blush Rose','#fdf0f0','#3a2530','#c2607a'],sage:['Sage Green','#eef2ea','#26332a','#5f7d5a'],indigo:['Clean Indigo','#ffffff','#14163a','#3b4cca'],sun:['Sunset','#fff4e8','#3b2312','#e0662b']};
 const FONTS={elegant:["'Playfair Display',serif",'Inter,sans-serif'],modern:['Montserrat,sans-serif','Montserrat,sans-serif'],luxe:["'Cormorant Garamond',serif",'Poppins,sans-serif'],bold:['Poppins,sans-serif','Poppins,sans-serif']};
-const DEF={brand:'',tag:'',phone:'',foot:'',theme:'ivory',lay:'one',fit:'0',pq:'1.3333',sp:'1',hs:'solid',ho:'0.6',fnt:'elegant',rad:'12',cbg:'#ffffff',cink:'#222222',cacc:'#b8860b'};
+const DEF={brand:'',tag:'',phone:'',foot:'',theme:'ivory',lay:'one',fit:'0',sp:'1',hs:'solid',ho:'0.15',fnt:'elegant',rad:'12',cbg:'#ffffff',cink:'#222222',cacc:'#b8860b'};
 const BGS=['#ffffff','#f5f1ea','#eeeeee','#f8e3e3','#dfe8f3'];
 let db,cur,user,imgs=[],bgc='#ffffff',editId=null,pg=0,tt;
 /* storage (IndexedDB) */
-/*STORE*/
-const bad=m=>{$('sv').textContent='⚠ NOT SAVED: '+(m||'storage error');$('sv').style.color='#b3372c'},ok=()=>{$('sv').textContent='✓ Saved';$('sv').style.color='#2e7d32'};
 const idb=()=>new Promise(r=>{try{const q=indexedDB.open('tlb2b',1);q.onupgradeneeded=()=>q.result.createObjectStore('kv');q.onsuccess=()=>{db=q.result;r()};q.onerror=()=>r()}catch(e){r()}});
-const kv=(m,k,v)=>new Promise(r=>{if(!db){if(m=='set')bad('storage not available');return r(null)}try{const t=db.transaction('kv',m=='get'||m=='all'?'readonly':'readwrite'),s=t.objectStore('kv'),q=m=='get'?s.get(k):m=='set'?s.put(v,k):m=='del'?s.delete(k):s.getAll();t.oncomplete=()=>{if(m=='set')ok();r(q.result)};t.onabort=t.onerror=()=>{if(m!='get'&&m!='all')bad(t.error&&t.error.message);r(null)}}catch(e){if(m=='set')bad(e.message);r(null)}});
-const meta=c=>({...c,prods:c.prods.map(({imgs,...r})=>({...r,nimg:imgs?imgs.length:0}))});
-async function putImgs(cid,p){for(let i=0;i<8;i++){const k='im:'+cid+':'+p.id+':'+i;if(i<p.imgs.length){if(await kv('set',k,p.imgs[i])==null)return null}else await kv('del',k)}return 1}
-const delImgs=async(cid,pid)=>{for(let i=0;i<8;i++)await kv('del','im:'+cid+':'+pid+':'+i);await kv('del','im:'+cid+':'+pid)};
-const putCat=async c=>{for(const p of c.prods)await putImgs(c.id,p);return kv('set','cat:'+c.id,meta(c))};
-const saveNow=()=>{cur.upd=Date.now();return kv('set','cat:'+cur.id,meta(cur))};
-async function loadCat(id){const c=await kv('get','cat:'+id);if(!c)return null;c.set={...DEF,...c.set};for(const p of c.prods){if(p.imgs&&p.imgs.length)await putImgs(id,p);else{const a=await kv('get','im:'+id+':'+p.id);if(Array.isArray(a)){p.imgs=a;await putImgs(id,p)}else{p.imgs=[];for(let i=0;i<(p.nimg||0);i++){const d=await kv('get','im:'+id+':'+p.id+':'+i);if(d)p.imgs.push(d)}}}}return c}
-/*ENDSTORE*/
+const kv=(m,k,v)=>new Promise(r=>{if(!db)return r(null);try{const s=db.transaction('kv',m=='get'||m=='all'?'readonly':'readwrite').objectStore('kv');const q=m=='get'?s.get(k):m=='set'?s.put(v,k):m=='del'?s.delete(k):s.getAll();q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)}catch(e){r(null)}});
+const saveNow=()=>{cur.upd=Date.now();return kv('set','cat:'+cur.id,cur)};
 const touch=()=>{clearTimeout(tt);tt=setTimeout(saveNow,500)};
-async function saveFile(blob,name){const C=window.Capacitor,CH=3*1024*1024,b64=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result.split(',')[1]);f.readAsDataURL(b)});
- if(window.desk&&desk.open){if(!(await desk.open(name)))return false;for(let i=0;i<blob.size;i+=CH)await desk.write(new Uint8Array(await blob.slice(i,i+CH).arrayBuffer()));await desk.close();return true}
- if(window.desk)return desk.save(name,await b64(blob));
- if(C&&C.isNativePlatform&&C.isNativePlatform()){const{Filesystem,Share}=C.Plugins;let uri;for(let i=0;i<blob.size;i+=CH){const d=await b64(blob.slice(i,i+CH));if(!i)uri=(await Filesystem.writeFile({path:name,data:d,directory:'CACHE'})).uri;else await Filesystem.appendFile({path:name,data:d,directory:'CACHE'})}return Share.share({title:name,url:uri,dialogTitle:'Save / send'})}
+async function saveFile(blob,name){const b64=await new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result.split(',')[1]);f.readAsDataURL(blob)});const C=window.Capacitor;
+ if(window.desk)return desk.save(name,b64);
+ if(C&&C.isNativePlatform&&C.isNativePlatform()){const{Filesystem,Share}=C.Plugins;const w=await Filesystem.writeFile({path:name,data:b64,directory:'CACHE'});return Share.share({title:name,url:w.uri,dialogTitle:'Save / send'})}
  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove()}
 /* signup */
 function err(m){$('serr').textContent=m}
@@ -112,24 +102,23 @@ function enter(){$('signup').style.display='none';$('app').style.display='';clis
 /* catalogues */
 const mk=n=>({id:Date.now()+Math.floor(Math.random()*999),name:n,upd:Date.now(),set:{...DEF},prods:[]});
 async function newCat(){await saveNow();cur=mk('Catalogue '+new Date().toLocaleDateString('en-IN'));await saveNow();await kv('set','last',cur.id);reset();clist();loadDesign();list();tab(2)}
-async function openCat(id){await saveNow();cur=await loadCat(id);await kv('set','last',id);reset();clist();loadDesign();list();tab(1)}
-async function dupCat(id){const c=await loadCat(id);c.id=Date.now();c.name+=' copy';await putCat(c);clist()}
-async function delCat(id){if(!confirm('Delete this catalogue permanently?'))return;const m=await kv('get','cat:'+id);if(m)for(const p of m.prods)await delImgs(id,p.id);await kv('del','cat:'+id);if(id==cur.id){const a=((await kv('all'))||[]).filter(x=>x&&x.prods);cur=a[0]?await loadCat(a[0].id):mk('My first catalogue');await saveNow();await kv('set','last',cur.id);reset();loadDesign();list()}clist()}
+async function openCat(id){await saveNow();cur=await kv('get','cat:'+id);cur.set={...DEF,...cur.set};await kv('set','last',id);reset();clist();loadDesign();list();tab(1)}
+async function dupCat(id){const c=await kv('get','cat:'+id);c.id=Date.now();c.name+=' copy';await kv('set','cat:'+c.id,c);clist()}
+async function delCat(id){if(!confirm('Delete this catalogue permanently?'))return;await kv('del','cat:'+id);if(id==cur.id){const a=((await kv('all'))||[]).filter(x=>x&&x.prods);cur=a[0]||mk('My first catalogue');await saveNow();await kv('set','last',cur.id);reset();loadDesign();list()}clist()}
 async function clist(){await saveNow();const a=((await kv('all'))||[]).filter(x=>x&&x.prods).sort((x,y)=>y.upd-x.upd);$('curn').textContent='Open: '+cur.name;
  $('clist').innerHTML=a.map(c=>`<div class="li"><span><b>${esc(c.name)}</b>${c.id==cur.id?' ✅':''}<br><small>${c.prods.length} products · ${new Date(c.upd).toLocaleDateString('en-IN')}</small></span><button onclick="openCat(${c.id})">Open</button><button onclick="dupCat(${c.id})">Copy</button><button onclick="delCat(${c.id})">✕</button></div>`).join('')}
-async function backup(){await saveNow();const m=((await kv('all'))||[]).filter(x=>x&&x.prods),cats=[];let np=0,ni=0;for(const x of m){const c=await loadCat(x.id);cats.push(c);np+=c.prods.length;ni+=c.prods.reduce((a,p)=>a+p.imgs.length,0)}
- if(!ni)return alert('Nothing to back up: no products with photos were found in this app.');const parts=['{"v":3,"cats":['];cats.forEach((c,ci)=>{const{prods,...h}=c;parts.push((ci?',':'')+JSON.stringify(h).slice(0,-1)+',"prods":[');prods.forEach((p,pi)=>parts.push((pi?',':'')+JSON.stringify(p)));parts.push(']}')});parts.push(']}');const r=await saveFile(new Blob(parts,{type:'application/json'}),'Threadline_backup_'+new Date().toISOString().slice(0,10)+'.json');if(r===false)return;alert('Backup saved: '+cats.length+' catalogue(s), '+np+' product(s), '+ni+' photo(s).')}
-$('rf').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());let ni=0;for(const c of d.cats){await putCat(c);ni+=c.prods.reduce((a,p)=>a+(p.imgs?p.imgs.length:0),0)}alert('Restored '+d.cats.length+' catalogue(s) with '+ni+' photo(s)');clist()}catch(x){alert('This is not a valid backup file')}e.target.value=''};
+async function backup(){await saveNow();const a=((await kv('all'))||[]).filter(x=>x&&x.prods);await saveFile(new Blob([JSON.stringify({v:1,cats:a})],{type:'application/json'}),'Threadline_backup_'+new Date().toISOString().slice(0,10)+'.json')}
+$('rf').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());for(const c of d.cats)await kv('set','cat:'+c.id,c);alert('Restored '+d.cats.length+' catalogue(s)');clist()}catch(x){alert('This is not a valid backup file')}e.target.value=''};
 function tab(n){[0,1,2,3].forEach(i=>{$('s'+i).style.display=i==n?'':'none';$('t'+i).classList.toggle('on',i==n)});if(n==3){pg=0;showPg()}}
 /* design */
-const DK=['brand','tag','phone','foot','hs','ho','lay','fit','pq','sp','fnt','rad','cbg','cink','cacc'];
+const DK=['brand','tag','phone','foot','hs','ho','lay','fit','sp','fnt','rad','cbg','cink','cacc'];
 function loadDesign(){DK.forEach(k=>$(k).value=cur.set[k]);$('cname').value=cur.name;thm()}
 function thm(){const s=cur.set;$('themes').innerHTML=Object.entries({...THEMES,custom:['Custom colours',s.cbg,s.cink,s.cacc]}).map(([k,v])=>`<div class="${k==s.theme?'on':''}" style="background:${v[1]};color:${v[2]}" onclick="cur.set.theme='${k}';thm();touch()"><span style="color:${v[3]}">●</span> ${v[0]}</div>`).join('')}
-$('s2').addEventListener('input',e=>{if(e.target.id=='cname'){cur.name=e.target.value;$('curn').textContent='Open: '+cur.name}else if(DK.includes(e.target.id)){cur.set[e.target.id]=e.target.value;if(/^c(bg|ink|acc)$/.test(e.target.id)){cur.set.theme='custom';thm()}}touch()});
+$('s2').addEventListener('input',e=>{if(e.target.id=='cname'){cur.name=e.target.value;$('curn').textContent='Open: '+cur.name}else if(DK.includes(e.target.id)){cur.set[e.target.id]=e.target.value;if(/^c(bg\vert{}ink\vert{}acc)$/.test(e.target.id)){cur.set.theme='custom';thm()}}touch()});
 /* photos */
 const load=src=>new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.src=src});
-async function shrink(file){return new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(file)})}
-async function proc(src,fx){return src;if(!fx||(fx.br==1&&fx.co==1&&fx.sa==1&&fx.bg=='none'))return src;const im=await load(src),c=document.createElement('canvas');c.width=im.width;c.height=im.height;const x=c.getContext('2d');x.drawImage(im,0,0);const d=x.getImageData(0,0,c.width,c.height),p=d.data,W=c.width,H=c.height;
+async function shrink(file,max=1400){const u=await new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(file)});const im=await load(u),s=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);return c.toDataURL('image/jpeg',.85)}
+async function proc(src,fx){if(!fx||(fx.br==1&&fx.co==1&&fx.sa==1&&fx.bg=='none'))return src;const im=await load(src),c=document.createElement('canvas');c.width=im.width;c.height=im.height;const x=c.getContext('2d');x.drawImage(im,0,0);const d=x.getImageData(0,0,c.width,c.height),p=d.data,W=c.width,H=c.height;
  if(fx.bg=='rm'){const cs=[[2,2],[W-3,2],[2,H-3],[W-3,H-3]].map(([a,b])=>{const i=(b*W+a)*4;return[p[i],p[i+1],p[i+2]]}),m=[0,1,2].map(k=>cs.reduce((s,v)=>s+v[k],0)/4),t2=fx.tol*fx.tol,near=i=>{const a=p[i*4]-m[0],b=p[i*4+1]-m[1],e=p[i*4+2]-m[2];return a*a+b*b+e*e<t2},seen=new Uint8Array(W*H),q=new Int32Array(W*H);let h=0,t=0;const push=i=>{if(!seen[i]&&near(i)){seen[i]=1;q[t++]=i}};
   for(let i=0;i<W;i++){push(i);push((H-1)*W+i)}for(let j=0;j<H;j++){push(j*W);push(j*W+W-1)}
   while(h<t){const i=q[h++],cx=i%W;if(cx>0)push(i-1);if(cx<W-1)push(i+1);if(i>=W)push(i-W);if(i<W*(H-1))push(i+W)}
@@ -147,10 +136,10 @@ addEventListener('paste',e=>{const f=[...(e.clipboardData?.items||[])].filter(i=
 function sw(){$('sw').innerHTML=BGS.map(c=>`<i style="background:${c}" class="${c==bgc?'on':''}" onclick="bgc='${c}';sw();pvUpd()"></i>`).join('')+`<input type="color" value="${bgc}" style="width:44px" oninput="bgc=this.value;pvUpd()">`}
 const PF=['name','cat','fab','price','mrp','sizes','cols','desc','sku','moq'];
 function reset(){editId=null;imgs=[];PF.forEach(k=>$(k).value='');$('br').value=$('co').value=$('sa').value=1;$('tol').value=45;$('bg').value='none';$('bgopt').style.display='none';bgc='#ffffff';sw();$('ftitle').textContent='Add product';$('cancel').style.display='none';thumbs()}
-async function saveP(){if(!$('name').value.trim())return alert('Enter product name');if(!imgs.length)return alert('Add at least 1 photo');const p={id:editId||Date.now(),imgs:[...imgs],fx:getFx()};PF.forEach(k=>p[k]=$(k).value);
- if(await putImgs(cur.id,p)==null)return alert('This product could NOT be saved (storage problem). Try fewer or smaller photos.');const i=cur.prods.findIndex(x=>x.id==editId);if(i>=0)cur.prods[i]=p;else cur.prods.push(p);await saveNow();reset();list()}
+function saveP(){if(!$('name').value.trim())return alert('Enter product name');if(!imgs.length)return alert('Add at least 1 photo');const p={id:editId\vert{}\vert{}Date.now(),imgs:[...imgs],fx:getFx()};PF.forEach(k=>p[k]=$(k).value);
+ const i=cur.prods.findIndex(x=>x.id==editId);if(i>=0)cur.prods[i]=p;else cur.prods.push(p);saveNow();reset();list()}
 function edit(id){const p=cur.prods.find(x=>x.id==id);editId=id;imgs=[...p.imgs];PF.forEach(k=>$(k).value=p[k]||'');$('br').value=p.fx.br;$('co').value=p.fx.co;$('sa').value=p.fx.sa;$('tol').value=p.fx.tol;$('bg').value=p.fx.bg;bgc=p.fx.bgc;$('bgopt').style.display=p.fx.bg=='rm'?'':'none';sw();$('ftitle').textContent='Edit product';$('cancel').style.display='';thumbs();scrollTo({top:0,behavior:'smooth'})}
-async function del(id){if(confirm('Delete this product?')){cur.prods=cur.prods.filter(p=>p.id!=id);await delImgs(cur.id,id);saveNow();list()}}
+function del(id){if(confirm('Delete this product?')){cur.prods=cur.prods.filter(p=>p.id!=id);saveNow();list()}}
 function mv(id,d){const P=cur.prods,i=P.findIndex(p=>p.id==id),j=i+d;if(j<0||j>=P.length)return;[P[i],P[j]]=[P[j],P[i]];saveNow();list()}
 function list(){$('cnt').textContent=cur.prods.length;$('list').innerHTML=cur.prods.map(p=>`<div class="li"><img src="${p.imgs[0]}"><span><b>${esc(p.name)}</b><br><small>${p.price?'₹'+esc(p.price):''}</small></span><button onclick="mv(${p.id},-1)">↑</button><button onclick="mv(${p.id},1)">↓</button><button onclick="edit(${p.id})">Edit</button><button onclick="del(${p.id})">✕</button></div>`).join('')||'<p class="hint">No products yet.</p>'}
 /* ===== page renderer: 1080x1920 (9:16 phone screen) ===== */
@@ -163,31 +152,27 @@ function rr(x,X,Y,w,h,r){r=Math.min(r,w/2,h/2);x.beginPath();x.moveTo(X+r,Y);x.a
 function photo(x,im,X,Y,w,h,fit){const s=(fit?Math.min:Math.max)(w/im.width,h/im.height),dw=im.width*s,dh=im.height*s;x.save();x.beginPath();x.rect(X,Y,w,h);x.clip();x.drawImage(im,X+(w-dw)/2,Y+(h-dh)/2,dw,dh);x.restore()}
 function grad(x,y0,col,a){const g=x.createLinearGradient(0,y0,0,H);g.addColorStop(0,rgba(col,0));g.addColorStop(.4,rgba(col,a*.9));g.addColorStop(1,rgba(col,a));x.fillStyle=g;x.fillRect(0,y0,W,H-y0)}
 async function img(p,i){return load(await proc(p.imgs[i],p.fx))}
-function head(x,k,col){const s=cur.set,sm=s.hs=='small',fs=sm?30:58,sp=sm?fs*.6:fs*.24;x.save();if(col=='#ffffff'||col=='#111111')sh(x,col);x.globalAlpha=+s.ho;x.fillStyle=x.strokeStyle=col;x.font=`800 ${fs}px ${k.hf}`;x.textBaseline='top';x.textAlign='left';x.lineWidth=2.5;
- const ch=[...HEAD],w=ch.map(c=>x.measureText(c).width),tw=w.reduce((a,b)=>a+b,0)+sp*(ch.length-1),y=sm?90:70;let cx=(W-tw)/2;ch.forEach((c,i)=>{s.hs=='outline'?x.strokeText(c,cx,y):x.fillText(c,cx,y);cx+=w[i]+sp});
+function head(x,k,col){const s=cur.set,sm=s.hs=='small',fs=sm?30:58,sp=sm?fs*.6:fs*.24;x.save();x.globalAlpha=+s.ho;x.fillStyle=x.strokeStyle=col;x.font=`800 ${fs}px ${k.hf}`;x.textBaseline='top';x.textAlign='left';x.lineWidth=2.5;
+ const ch=[...HEAD],w=ch.map(c=>x.measureText(c).width),tw=w.reduce((a,b)=>a+b,0)+sp*(ch.length-1),y=H-80;let cx=(W-tw)/2;ch.forEach((c,i)=>{s.hs=='outline'?x.strokeText(c,cx,y):x.fillText(c,cx,y);cx+=w[i]+sp});
  if(sm){x.lineWidth=2;x.beginPath();x.moveTo((W-tw)/2,y-24);x.lineTo((W+tw)/2,y-24);x.moveTo((W-tw)/2,y+fs+24);x.lineTo((W+tw)/2,y+fs+24);x.stroke()}x.restore()}
 function topShade(x){const g=x.createLinearGradient(0,0,0,300);g.addColorStop(0,'rgba(0,0,0,.45)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,0,W,300)}
-function info(x,k,p,s){const m=70,mw=W-2*m;x.font=`700 80px ${k.hf}`;const nm=wrap(x,p.name,mw,2);x.font=`400 34px ${k.bf}`;const ds=p.desc?wrap(x,p.desc,mw,8):[],meta=[p.cols&&'Colours: '+p.cols,p.fab&&'Fabric: '+p.fab,p.moq&&'MOQ: '+p.moq].filter(Boolean),sz=chips(p.sizes),pr=s.sp=='1'&&p.price;
- const h=(p.cat||p.sku?54:0)+nm.length*92+(pr?96:0)+(sz.length?84:0)+meta.length*50+ds.length*50+10;let y=300;x.textBaseline='top';x.textAlign='left';
- if(p.cat){x.font=`700 30px ${k.bf}`;x.fillStyle=k.acc;x.fillText(p.cat.toUpperCase(),m,y);y+=54}
+function info(x,k,p,s){const m=70,mw=W-2*m;x.font=`700 80px ${k.hf}`;const nm=wrap(x,p.name,mw,2);x.font=`400 34px ${k.bf}`;const ds=p.desc?wrap(x,p.desc,mw,4):[],meta=[p.cols&&'Colours: '+p.cols,p.fab&&'Fabric: '+p.fab,p.moq&&'MOQ: '+p.moq].filter(Boolean),sz=chips(p.sizes),pr=s.sp=='1'&&p.price;
+ const h=(p.cat||p.sku?54:0)+nm.length*92+(pr?96:0)+(sz.length?84:0)+meta.length*50+ds.length*50+10;let y=H-h-100;grad(x,Math.max(0,y-340),k.bg,.97);x.textBaseline='top';x.textAlign='left';
+ if(p.cat||p.sku){x.font=`700 30px ${k.bf}`;x.fillStyle=k.acc;x.fillText([p.cat,p.sku].filter(Boolean).join('  ·  ').toUpperCase(),m,y);y+=54}
  x.font=`700 80px ${k.hf}`;x.fillStyle=k.ink;nm.forEach(l=>{x.fillText(l,m,y);y+=92});
  if(pr){x.font=`700 54px ${k.bf}`;x.fillStyle=k.acc;x.fillText(money(p.price),m,y);let cx=m+x.measureText(money(p.price)).width+24;const off=p.mrp&&+p.mrp>+p.price?Math.round((1-p.price/p.mrp)*100):0;
   if(off){x.font=`400 34px ${k.bf}`;x.fillStyle='#999';const t=money(p.mrp),tw=x.measureText(t).width;x.fillText(t,cx,y+12);x.fillRect(cx,y+32,tw,2.5);cx+=tw+24;x.font=`700 28px ${k.bf}`;const b=off+'% OFF',bw=x.measureText(b).width+34;rr(x,cx,y+8,bw,48,24);x.fillStyle=k.acc;x.fill();x.fillStyle=k.bg;x.fillText(b,cx+17,y+16)}y+=96}
  if(sz.length){x.font=`600 30px ${k.bf}`;let cx=m;sz.forEach(t=>{const w=x.measureText(t).width+40;if(cx+w>W-m)return;rr(x,cx,y,w,56,+s.rad>0?14:4);x.lineWidth=2.5;x.strokeStyle=k.ink;x.stroke();x.fillStyle=k.ink;x.fillText(t,cx+20,y+12);cx+=w+14});y+=84}
  x.font=`400 34px ${k.bf}`;x.fillStyle=k.ink;meta.forEach(t=>{x.fillText(t,m,y);y+=50});x.globalAlpha=.85;ds.forEach(t=>{x.fillText(t,m,y);y+=50});x.globalAlpha=1}
 let fr;const fonts=()=>fr||(fr=Promise.all(['700 40px "Playfair Display"','800 40px Montserrat','700 40px "Cormorant Garamond"','800 40px Poppins','600 40px Inter'].map(f=>document.fonts.load(f).catch(()=>0))));
-function plan(){const s=cur.set,pl=[{t:'cover'}];if(s.lay=='grid'){for(let i=0;i<cur.prods.length;i+=6)pl.push({t:'grid',it:cur.prods.slice(i,i+6)})}else cur.prods.forEach(p=>{p.imgs.forEach((_,i)=>pl.push({t:'ph',p,i}));pl.push({t:'dt',p})});pl.push({t:'end'});return pl}
-function tone(x,X,Y,w,h){try{const m=x.getTransform().a,d=x.getImageData(Math.round(X*m),Math.round(Y*m),Math.max(1,Math.round(w*m)),Math.max(1,Math.round(h*m))).data;let t=0,n=0;for(let i=0;i<d.length;i+=64){t+=.299*d[i]+.587*d[i+1]+.114*d[i+2];n++}return t/n>150?'#111111':'#ffffff'}catch(e){return '#ffffff'}}
-function sh(x,c){x.shadowColor=c=='#ffffff'?'rgba(0,0,0,.55)':'rgba(255,255,255,.6)';x.shadowBlur=14}
-async function draw(cv,d,sc=1){await fonts();cv.width=Math.round(W*sc);cv.height=Math.round(H*sc);const x=cv.getContext('2d'),s=cur.set,k=pal();x.scale(cv.width/W,cv.height/H);x.imageSmoothingQuality='high';x.fillStyle=k.bg;x.fillRect(0,0,W,H);x.textBaseline='top';x.textAlign='center';
- if(d.t=='cover'){const p=cur.prods[0];if(p)photo(x,await img(p,0),0,0,W,H,s.fit=='1');
-  const c=p?tone(x,0,Math.floor(H*.7),W,Math.floor(H*.3)):k.ink,hc=p?tone(x,0,40,W,140):k.ink;x.save();if(p)sh(x,c);
-  let fs=130;x.font=`700 ${fs}px ${k.hf}`;const b=s.brand||'Your Brand';while(x.measureText(b).width>940&&fs>40){fs-=6;x.font=`700 ${fs}px ${k.hf}`}x.fillStyle=c;x.fillText(b,W/2,H*.76);
-  x.font=`700 32px ${k.bf}`;x.fillStyle=p?c:k.acc;x.fillText((s.tag||'Catalogue').toUpperCase().split('').join(String.fromCharCode(8202,8202)),W/2,H*.76+fs+30);
-  if(s.phone){x.font=`600 36px ${k.bf}`;x.fillStyle=c;x.fillText('Order: '+s.phone,W/2,H-120)}x.restore();head(x,k,hc)}
- else if(d.t=='ph'){const{p,i}=d;photo(x,await img(p,i),0,0,W,H,s.fit=='1');const hc=tone(x,0,40,W,140),c=tone(x,0,170,720,220);
-  x.save();sh(x,c);x.textAlign='left';x.fillStyle=c;x.font=`700 54px ${k.hf}`;const nm=wrap(x,p.name,780,2);nm.forEach((l,j)=>x.fillText(l,60,170+j*64));if(p.sku){x.font=`600 36px ${k.bf}`;x.fillText(p.sku,60,170+nm.length*64+6)}x.restore();head(x,k,hc)}
- else if(d.t=='dt'){const p=d.p;info(x,k,p,s);for(let i=0;i<p.imgs.length&&i<4;i++){const X=70+i*210,Y=H-343;x.save();rr(x,X,Y,190,253,+s.rad);x.clip();photo(x,await img(p,i),X,Y,190,253,false);x.restore()}head(x,k,k.ink)}
+function plan(){const s=cur.set,pl=[{t:'cover'}];if(s.lay=='grid'){for(let i=0;i<cur.prods.length;i+=6)pl.push({t:'grid',it:cur.prods.slice(i,i+6)})}else cur.prods.forEach(p=>p.imgs.forEach((_,i)=>pl.push({t:'ph',p,i})));pl.push({t:'end'});return pl}
+async function draw(cv,d){await fonts();cv.width=W;cv.height=H;const x=cv.getContext('2d'),s=cur.set,k=pal();x.fillStyle=k.bg;x.fillRect(0,0,W,H);x.textBaseline='top';x.textAlign='center';
+ if(d.t=='cover'){const p=cur.prods[0];if(p){photo(x,await img(p,0),0,0,W,H,s.fit=='1');topShade(x);grad(x,H*.38,k.bg,.96)}
+  let fs=130;x.font=`700 ${fs}px ${k.hf}`;const b=s.brand||'Your Brand';while(x.measureText(b).width>940&&fs>40){fs-=6;x.font=`700 ${fs}px ${k.hf}`}x.fillStyle=k.ink;x.fillText(b,W/2,H*.76);
+  x.font=`700 32px ${k.bf}`;x.fillStyle=k.acc;x.fillText((s.tag||'Catalogue').toUpperCase().split('').join(String.fromCharCode(8202,8202)),W/2,H*.76+fs+30);
+  if(s.phone){x.font=`600 36px ${k.bf}`;x.fillStyle=k.ink;x.fillText('Order: '+s.phone,W/2,H-120)}head(x,k,p?'#ffffff':k.ink)}
+ else if(d.t=='ph'){const{p,i}=d,n=p.imgs.length;photo(x,await img(p,i),0,0,W,H,s.fit=='1');topShade(x);
+  if(i==0)info(x,k,p,s);else{grad(x,H-420,k.bg,.95);x.textAlign='left';x.fillStyle=k.ink;x.font=`700 54px ${k.hf}`;x.fillText(p.name,70,H-190);x.font=`600 30px ${k.bf}`;x.fillStyle=k.acc;x.fillText(`VIEW ${i+1} OF ${n}`,70,H-110)}head(x,k,'#ffffff')}
  else if(d.t=='grid'){const cw=(W-3*50)/2,ih=420,rh=ih+120;for(let j=0;j<d.it.length;j++){const p=d.it[j],X=50+(j%2)*(cw+50),Y=250+Math.floor(j/2)*(rh+30);x.save();rr(x,X,Y,cw,ih,+s.rad);x.clip();photo(x,await img(p,0),X,Y,cw,ih,s.fit=='1');x.restore();
    x.textAlign='left';x.fillStyle=k.ink;x.font=`700 34px ${k.hf}`;const nm=wrap(x,p.name,cw,1);x.fillText(nm[0]||'',X,Y+ih+14);if(s.sp=='1'&&p.price){x.font=`700 32px ${k.bf}`;x.fillStyle=k.acc;x.fillText(money(p.price),X,Y+ih+62)}}head(x,k,k.ink)}
  else{x.fillStyle=k.ink;x.font=`700 110px ${k.hf}`;x.fillText('Thank you',W/2,H*.34);x.font=`400 38px ${k.bf}`;x.fillText('To place an order, contact',W/2,H*.34+160);x.font=`700 76px ${k.bf}`;x.fillStyle=k.acc;x.fillText(s.phone||'',W/2,H*.34+230);
@@ -200,9 +185,9 @@ function makePdf(jp,PW,PH){const enc=new TextEncoder(),parts=[],off=[];let len=0
  jp.forEach((j,i)=>{const p=3+3*i,c=`q ${PW} 0 0 ${PH} 0 0 cm /Im0 Do Q`;obj(p,`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW} ${PH}] /Resources << /XObject << /Im0 ${p+2} 0 R >> >> /Contents ${p+1} 0 R >>`);obj(p+1,`<< /Length ${c.length} >>\nstream\n${c}\nendstream`);
   off[p+2]=len;add(`${p+2} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${j.w} /Height ${j.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${j.b.length} >>\nstream\n`);add(j.b);add('\nendstream\nendobj\n')});
  const xr=len,T=3*N+3;let t='xref\n0 '+T+'\n0000000000 65535 f \n';for(let i=1;i<T;i++)t+=String(off[i]).padStart(10,'0')+' 00000 n \n';add(t+`trailer\n<< /Size ${T} /Root 1 0 R >>\nstartxref\n${xr}\n%%EOF`);return new Blob(parts,{type:'application/pdf'})}
-async function makePdfNow(){if(!cur.prods.length)return alert('Add products first');$('pdfb').disabled=true;const pl=plan(),jp=[],sc=+cur.set.pq||1;
- try{for(let i=0;i<pl.length;i++){$('pst').textContent=`Creating page ${i+1} of ${pl.length}…`;const c=document.createElement('canvas');await draw(c,pl[i],sc);const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.97));jp.push({b:new Uint8Array(await b.arrayBuffer()),w:c.width,h:c.height});c.width=c.height=1}
+async function makePdfNow(){if(!cur.prods.length)return alert('Add products first');$('pdfb').disabled=true;const pl=plan(),jp=[];
+ try{for(let i=0;i<pl.length;i++){$('pst').textContent=`Creating page ${i+1} of ${pl.length}…`;const c=document.createElement('canvas');await draw(c,pl[i]);const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.88));jp.push({b:new Uint8Array(await b.arrayBuffer()),w:W,h:H});c.width=c.height=1}
   await saveFile(makePdf(jp,540,960),(cur.name||'Catalogue').replace(/[^\w-]+/g,'_')+'.pdf');$('pst').textContent='Done ✅ PDF saved'}catch(e){$('pst').textContent='PDF failed: '+e.message}$('pdfb').disabled=false}
 /* start */
-(async()=>{await idb();user=await kv('get','user');const last=await kv('get','last');cur=last&&await loadCat(last);if(!cur){cur=mk('My first catalogue');await saveNow();await kv('set','last',cur.id)}cur.set={...DEF,...cur.set};sw();reset();if(user)user.sent?enter():showSend()})();
+(async()=>{await idb();user=await kv('get','user');const last=await kv('get','last');cur=last&&await kv('get','cat:'+last);if(!cur){cur=mk('My first catalogue');await saveNow();await kv('set','last',cur.id)}cur.set={...DEF,...cur.set};sw();reset();if(user)user.sent?enter():showSend()})();
 </script></body></html>
