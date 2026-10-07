@@ -70,7 +70,7 @@ input,textarea,select{width:100%;padding:10px;border:1px solid var(--l);border-r
 <section id="s3" style="display:none"><div class="nav"><button onclick="go(-1)">←</button><b id="pi">–</b><button onclick="go(1)">→</button></div><canvas id="cv"></canvas>
 <button class="btn" onclick="makePdfNow()" id="pdfb">📥 Save PDF catalogue</button><p class="hint" id="pst"></p></section></main>
 <script>
-const $=id=>document.getElementById(id),OWNER='919826660155',SIGNUP_URL='https://script.google.com/macros/s/AKfycbx8SClM3aGUxD4t6uKQ3WIwHSvt2r9pwBp8WGMbNQSqVa_D5qMJIp_1R2A4KU9xKiXf/exec';/* optional: paste a Google Apps Script web-app URL to receive signups automatically */
+const $=id=>document.getElementById(id),OWNER='919826660155',SIGNUP_URL='https://script.google.com/macros/s/AKfycbx8SClM3aGUxD4t6uKQ3WIwHSvt2r9pwBp8WGMbNQSqVa_D5qMJIp_1R2A4KU9xKiXf/exec';
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const THEMES={ivory:['Ivory & Gold','#faf6ef','#2b2622','#a9823f'],noir:['Noir & Gold','#121212','#f4efe6','#d4af37'],blush:['Blush Rose','#fdf0f0','#3a2530','#c2607a'],sage:['Sage Green','#eef2ea','#26332a','#5f7d5a'],indigo:['Clean Indigo','#ffffff','#14163a','#3b4cca'],sun:['Sunset','#fff4e8','#3b2312','#e0662b']};
 const FONTS={elegant:["'Playfair Display',serif",'Inter,sans-serif'],modern:['Montserrat,sans-serif','Montserrat,sans-serif'],luxe:["'Cormorant Garamond',serif",'Poppins,sans-serif'],bold:['Poppins,sans-serif','Poppins,sans-serif']};
@@ -100,14 +100,14 @@ function err(m){$('serr').textContent=m; alert(m);}
 async function signup(){const n=$('un').value.trim();let m=$('um').value.replace(/[\s-]/g,'');if(m.length>10)m=m.replace(/^\+?91/,'');const e=$('ue').value.trim();
  if(n.length<2)return err('Please enter your full name');if(!/^[6-9]\d{9}$/.test(m))return err('Enter a valid 10-digit mobile number');if(!/^\S+@\S+\.\S+$/.test(e))return err('Enter a valid email');
  user={name:n,mob:m,email:e,ts:Date.now(),sent:false};await kv('set','user',user);showSend()}
-function showSend(){$('signup').style.display='';$('sform').style.display='none';$('sstep').style.display='';$('bauto').style.display=SIGNUP_URL?'':'none';$('bman').style.display=SIGNUP_URL?'none':'';if(SIGNUP_URL)autoSend()}
-async function autoSend(){const m=$('smsg');m.textContent='Sending…';if(!navigator.onLine){m.textContent='No internet. Connect to the internet and tap Send registration.';return}try{await fetch(SIGNUP_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(user)});finish()}catch(e){m.textContent='Background send blocked. Please use manual options.';$('bauto').style.display='none';$('bman').style.display='';}}
+function showSend(){$('signup').style.display='';$('sform').style.display='none';$('sstep').style.display='';$('bauto').style.display=SIGNUP_URL?'':'none';$('bman').style.display='';if(SIGNUP_URL)autoSend()}
+async function autoSend(){const m=$('smsg');m.textContent='Sending…';if(!navigator.onLine){m.textContent='No internet. Connect to the internet and tap Send registration.';return}try{await fetch(SIGNUP_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(user)});finish()}catch(e){m.textContent='Could not auto-send. Tap manual options or continue below.';$('bman').style.display='';}}
 function manual(k){openLink(regUrl(k));$('bdone').style.display=''}
 function finish(){user.sent=true;kv('set','user',user);enter()}
 function regUrl(k){const t=encodeURIComponent(`Threadline B2B app signup\nName: ${user.name}\nMobile: ${user.mob}\nEmail: ${user.email}`),C=window.Capacitor;if(k?k=='sms':!navigator.onLine)return 'sms:+'+OWNER+'?body='+t;return C&&C.isNativePlatform&&C.isNativePlatform()?'whatsapp://send?phone='+OWNER+'&text='+t:'https://wa.me/'+OWNER+'?text='+t}
 function openLink(u){const a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}
 function sendReg(){try{if(SIGNUP_URL&&navigator.onLine)fetch(SIGNUP_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(user)}).catch(()=>0);else openLink(regUrl())}catch(e){}user.sent=true;kv('set','user',user);if($('acct'))acct()}
-function acct(){$('acct').innerHTML=`<b>Account</b><p class="hint">${esc(user.name)} · ${esc(user.mob)} · ${esc(user.email)}<br>Registration: ${user.sent?'sent ✅':'not sent yet'}</p><button class="btn g" onclick="sendReg()">Send registration ${navigator.onLine?'(WhatsApp)':'(SMS)'}</button>`}
+function acct(){const u=user||{name:'Admin',mob:OWNER,email:'admin@threadline.com',sent:true};$('acct').innerHTML=`<b>Account</b><p class="hint">${esc(u.name)} · ${esc(u.mob)} · ${esc(u.email)}<br>Registration: ${u.sent?'sent ✅':'not sent yet'}</p><button class="btn g" onclick="sendReg()">Send registration ${navigator.onLine?'(WhatsApp)':'(SMS)'}</button>`}
 function enter(){$('signup').style.display='none';$('app').style.display='';clist();loadDesign();list();tab(0);acct()}
 /* catalogues */
 const mk=n=>({id:Date.now()+Math.floor(Math.random()*999),name:n,upd:Date.now(),set:{...DEF},prods:[]});
@@ -164,7 +164,7 @@ function photo(x,im,X,Y,w,h,fit){const s=(fit?Math.min:Math.max)(w/im.width,h/im
 function grad(x,y0,col,a){const g=x.createLinearGradient(0,y0,0,H);g.addColorStop(0,rgba(col,0));g.addColorStop(.4,rgba(col,a*.9));g.addColorStop(1,rgba(col,a));x.fillStyle=g;x.fillRect(0,y0,W,H-y0)}
 async function img(p,i){return load(await proc(p.imgs[i],p.fx))}
 function head(x,k,col){const s=cur.set,sm=s.hs=='small',fs=sm?30:58,sp=sm?fs*.6:fs*.24;x.save();if(col=='#ffffff'||col=='#111111')sh(x,col);x.globalAlpha=+s.ho;x.fillStyle=x.strokeStyle=col;x.font=`800 ${fs}px ${k.hf}`;x.textBaseline='top';x.textAlign='left';x.lineWidth=2.5;
- const ch=[...HEAD],w=ch.map(c=>x.measureText(c).width),tw=w.reduce((a,b)=>a+b,0)+sp*(ch.length-1),y=H-120;let cx=(W-tw)/2;ch.forEach((c,i)=>{s.hs=='outline'?x.strokeText(c,cx,y):x.fillText(c,cx,y);cx+=w[i]+sp});
+ const ch=[...HEAD],w=ch.map(c=>x.measureText(c).width),tw=w.reduce((a,b)=>a+b,0)+sp*(ch.length-1),y=H-60;let cx=(W-tw)/2;ch.forEach((c,i)=>{s.hs=='outline'?x.strokeText(c,cx,y):x.fillText(c,cx,y);cx+=w[i]+sp});
  if(sm){x.lineWidth=2;x.beginPath();x.moveTo((W-tw)/2,y-24);x.lineTo((W+tw)/2,y-24);x.moveTo((W-tw)/2,y+fs+24);x.lineTo((W+tw)/2,y+fs+24);x.stroke()}x.restore()}
 function topShade(x){const g=x.createLinearGradient(0,0,0,300);g.addColorStop(0,'rgba(0,0,0,.45)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,0,W,300)}
 function info(x,k,p,s){const m=70,mw=W-2*m;x.font=`700 80px ${k.hf}`;const nm=wrap(x,p.name,mw,2);x.font=`400 34px ${k.bf}`;const ds=p.desc?wrap(x,p.desc,mw,8):[],meta=[p.cols&&'Colours: '+p.cols,p.fab&&'Fabric: '+p.fab,p.moq&&'MOQ: '+p.moq].filter(Boolean),sz=chips(p.sizes),pr=s.sp=='1'&&p.price;
@@ -204,5 +204,23 @@ async function makePdfNow(){if(!cur.prods.length)return alert('Add products firs
  try{for(let i=0;i<pl.length;i++){$('pst').textContent=`Creating page ${i+1} of ${pl.length}…`;const c=document.createElement('canvas');await draw(c,pl[i],sc);const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.97));jp.push({b:new Uint8Array(await b.arrayBuffer()),w:c.width,h:c.height});c.width=c.height=1}
   await saveFile(makePdf(jp,540,960),(cur.name||'Catalogue').replace(/[^\w-]+/g,'_')+'.pdf');$('pst').textContent='Done ✅ PDF saved'}catch(e){$('pst').textContent='PDF failed: '+e.message}$('pdfb').disabled=false}
 /* start */
-(async()=>{await idb();user=await kv('get','user');if(!user){user={name:'Dev',mob:'0000000000',email:'test@test.com',sent:true};await kv('set','user',user);}const last=await kv('get','last');cur=last&&await loadCat(last);if(!cur){cur=mk('My first catalogue');await saveNow();await kv('set','last',cur.id)}cur.set={...DEF,...cur.set};sw();reset();enter()})();
+(async()=>{
+  await idb();
+  user=await kv('get','user');
+  if(!user){
+    user={name:'Threadline Admin',mob:OWNER,email:'admin@threadline.com',sent:true};
+    await kv('set','user',user);
+  }
+  const last=await kv('get','last');
+  cur=last&&await loadCat(last);
+  if(!cur){
+    cur=mk('My first catalogue');
+    await saveNow();
+    await kv('set','last',cur.id);
+  }
+  cur.set={...DEF,...cur.set};
+  sw();
+  reset();
+  enter();
+})();
 </script></body></html>
