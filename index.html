@@ -86,12 +86,12 @@ async function saveFile(blob,name){const b64=await new Promise(r=>{const f=new F
  if(C&&C.isNativePlatform&&C.isNativePlatform()){const{Filesystem,Share}=C.Plugins;const w=await Filesystem.writeFile({path:name,data:b64,directory:'CACHE'});return Share.share({title:name,url:w.uri,dialogTitle:'Save / send'})}
  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove()}
 /* signup */
-function err(m){$('serr').textContent=m}
+function err(m){$('serr').textContent=m; alert(m);}
 async function signup(){const n=$('un').value.trim();let m=$('um').value.replace(/[\s-]/g,'');if(m.length>10)m=m.replace(/^\+?91/,'');const e=$('ue').value.trim();
  if(n.length<2)return err('Please enter your full name');if(!/^[6-9]\d{9}$/.test(m))return err('Enter a valid 10-digit mobile number');if(!/^\S+@\S+\.\S+$/.test(e))return err('Enter a valid email');
  user={name:n,mob:m,email:e,ts:Date.now(),sent:false};await kv('set','user',user);showSend()}
 function showSend(){$('signup').style.display='';$('sform').style.display='none';$('sstep').style.display='';$('bauto').style.display=SIGNUP_URL?'':'none';$('bman').style.display=SIGNUP_URL?'none':'';if(SIGNUP_URL)autoSend()}
-async function autoSend(){const m=$('smsg');m.textContent='Sending…';if(!navigator.onLine){m.textContent='No internet. Connect to the internet and tap Send registration.';return}try{await fetch(SIGNUP_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(user)});finish()}catch(e){m.textContent='Could not send. Check internet and try again.'}}
+async function autoSend(){const m=$('smsg');m.textContent='Sending…';if(!navigator.onLine){m.textContent='No internet. Connect to the internet and tap Send registration.';return}try{await fetch(SIGNUP_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(user)});finish()}catch(e){m.textContent='Background send blocked. Please use manual options.';$('bauto').style.display='none';$('bman').style.display='';}}
 function manual(k){openLink(regUrl(k));$('bdone').style.display=''}
 function finish(){user.sent=true;kv('set','user',user);enter()}
 function regUrl(k){const t=encodeURIComponent(`Threadline B2B app signup\nName: ${user.name}\nMobile: ${user.mob}\nEmail: ${user.email}`),C=window.Capacitor;if(k?k=='sms':!navigator.onLine)return 'sms:+'+OWNER+'?body='+t;return C&&C.isNativePlatform&&C.isNativePlatform()?'whatsapp://send?phone='+OWNER+'&text='+t:'https://wa.me/'+OWNER+'?text='+t}
